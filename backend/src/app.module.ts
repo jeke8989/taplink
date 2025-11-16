@@ -19,7 +19,7 @@ import { PageModule } from './page/page.module';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'taplink',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.DB_SYNCHRONIZE === 'true' || process.env.NODE_ENV !== 'production',
     }),
     AuthModule,
     UsersModule,
