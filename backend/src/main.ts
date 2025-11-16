@@ -11,8 +11,21 @@ async function bootstrap() {
     transform: true,
   }));
 
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://144.124.246.190',
+    process.env.FRONTEND_URL,
+    process.env.CORS_ORIGIN,
+  ].filter(Boolean);
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Разрешаем все для продакшена
+      }
+    },
     credentials: true,
   });
 

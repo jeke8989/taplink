@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '../api/profile';
+import type { Link } from '../api/profile';
 
 interface LinkManagerProps {
   links: Link[];

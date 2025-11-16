@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getMyProfile, updateMyProfile, UpdateProfileDto } from '../../api/profile';
+import { getMyProfile, updateMyProfile } from '../../api/profile';
+import type { UpdateProfileDto } from '../../api/profile';
 import { LinkManager } from '../../components/LinkManager';
 
 export const Settings: React.FC = () => {
