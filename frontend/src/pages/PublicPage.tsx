@@ -111,8 +111,20 @@ export const PublicPage: React.FC = () => {
       : renderLegacyContent();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#2a0f25] to-[#7b1334] text-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#2a0f25] to-[#7b1334] text-white flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md space-y-4">{blocksToRender}</div>
+      <a
+        href="/register"
+        className="mt-8 flex items-center gap-1.5 text-[10px] text-white/60 hover:text-white transition-colors"
+      >
+        <span className="w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold text-white">
+          B
+        </span>
+        <span className="tracking-[0.15em] uppercase text-white font-semibold">
+          BioHub
+        </span>
+        <span className="text-white/50">— Создай свою страницу</span>
+      </a>
     </div>
   );
 };
