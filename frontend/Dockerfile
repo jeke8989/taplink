@@ -21,11 +21,11 @@ RUN npm run build
 # Production stage с nginx
 FROM nginx:alpine
 
+# Копируем конфигурацию nginx (ПЕРЕД dist, чтобы изменения всегда применялись)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Копируем собранные файлы
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Копируем конфигурацию nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
