@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Используем относительные пути для API - nginx проксирует их на бэкенд
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '',
+  baseURL: '',
 });
 
 // Добавляем токен в заголовки автоматически
