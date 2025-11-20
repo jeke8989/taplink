@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
@@ -31,6 +35,26 @@ export class ProfileService {
     return profile;
   }
 
+  async isUsernameAvailable(username: string, currentUserId?: string) {
+    if (!username) {
+      return false;
+    }
+
+    const existingUser = await this.userRepository.findOne({
+      where: { username },
+    });
+
+    if (!existingUser) {
+      return true;
+    }
+
+    if (currentUserId && existingUser.id === currentUserId) {
+      return true;
+    }
+
+    return false;
+  }
+
   async updateProfile(
     userId: string,
     updateProfileDto: UpdateProfileDto,
@@ -48,6 +72,14 @@ export class ProfileService {
 
     // Обновляем username в User, если он указан
     if (updateProfileDto.username !== undefined) {
+      const isAvailable = await this.isUsernameAvailable(
+        updateProfileDto.username,
+        userId,
+      );
+      if (!isAvailable) {
+        throw new ConflictException('Username already taken');
+      }
+
       const user = await this.userRepository.findOne({
         where: { id: userId },
       });

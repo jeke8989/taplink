@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicPage } from '../api/page';
 import type { PublicPageData } from '../api/page';
+import { BlockRenderer } from '../components/BlockEditor/BlockRenderer';
 
 export const PublicPage: React.FC = () => {
   const { username } = useParams<{ username: string }>();
@@ -51,101 +52,67 @@ export const PublicPage: React.FC = () => {
     return null;
   }
 
-  const pageStyle: React.CSSProperties = {
-    backgroundColor: pageData.backgroundColor || '#ffffff',
-    color: pageData.fontColor || '#000000',
-    fontFamily: pageData.fontFamily || 'Arial',
-    minHeight: '100vh',
-  };
+  const renderLegacyContent = () => {
+    const blocks: React.ReactNode[] = [];
 
-  // Определяем, светлый или темный фон для правильного контраста
-  const isLightBackground = 
-    !pageData.backgroundColor || 
-    pageData.backgroundColor === '#ffffff' || 
-    pageData.backgroundColor.toLowerCase() === '#fff' ||
-    (pageData.backgroundColor.startsWith('#') && 
-     parseInt(pageData.backgroundColor.slice(1), 16) > 0xAAAAAA);
-
-  const linkButtonStyle: React.CSSProperties = {
-    color: pageData.fontColor || (isLightBackground ? '#1f2937' : '#ffffff'),
-    borderColor: isLightBackground 
-      ? 'rgba(0, 0, 0, 0.2)' 
-      : 'rgba(255, 255, 255, 0.3)',
-    backgroundColor: isLightBackground 
-      ? 'rgba(255, 255, 255, 0.9)' 
-      : 'rgba(255, 255, 255, 0.1)',
-  };
-
-  return (
-    <div style={pageStyle} className="flex flex-col items-center justify-center py-12 px-4 min-h-screen">
-      <div className="max-w-lg w-full space-y-8 text-center">
-        {pageData.avatarUrl && (
-          <div className="flex justify-center">
+    if (pageData.avatarUrl || pageData.displayName) {
+      blocks.push(
+        <div key="legacy-avatar" className="flex flex-col items-center text-center py-4">
+          {pageData.avatarUrl && (
             <img
               src={pageData.avatarUrl}
               alt={pageData.displayName || 'Avatar'}
-              className="w-32 h-32 rounded-full object-cover border-4 shadow-xl"
-              style={{ 
-                borderColor: isLightBackground 
-                  ? 'rgba(0, 0, 0, 0.1)' 
-                  : 'rgba(255, 255, 255, 0.2)' 
-              }}
+              className="w-24 h-24 rounded-full object-cover mb-3 border-2 border-white/30"
             />
-          </div>
-        )}
+          )}
+          {pageData.displayName && (
+            <div className="font-bold text-lg">{pageData.displayName}</div>
+          )}
+          {pageData.bio && (
+            <div className="text-sm opacity-80 whitespace-pre-line">
+              {pageData.bio}
+            </div>
+          )}
+        </div>,
+      );
+    }
 
-        {pageData.displayName && (
-          <h1 
-            className="text-5xl font-bold mb-2"
-            style={{ color: pageData.fontColor || (isLightBackground ? '#111827' : '#ffffff') }}
-          >
-            {pageData.displayName}
-          </h1>
-        )}
+    if (pageData.links && pageData.links.length > 0) {
+      blocks.push(
+        <div key="legacy-links" className="space-y-3">
+          {pageData.links.map((link, index) => (
+            <a
+              key={index}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-white bg-opacity-10 hover:bg-opacity-20 transition-all px-6 py-4 rounded-2xl text-center"
+            >
+              {link.title}
+            </a>
+          ))}
+        </div>,
+      );
+    }
 
-        {pageData.bio && (
-          <p 
-            className="text-lg leading-relaxed whitespace-pre-line px-4"
-            style={{ 
-              color: pageData.fontColor 
-                ? `${pageData.fontColor}dd` 
-                : (isLightBackground ? '#4b5563' : '#e5e7eb'),
-              opacity: 0.9 
-            }}
-          >
-            {pageData.bio}
-          </p>
-        )}
+    return blocks.length ? blocks : null;
+  };
 
-        {pageData.links && pageData.links.length > 0 && (
-          <div className="space-y-3 mt-10 px-4">
-            {pageData.links.map((link, index: number) => (
-              <a
-                key={index}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full px-6 py-4 rounded-xl transition-all duration-300 border-2 font-medium text-lg shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-                style={linkButtonStyle}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = isLightBackground 
-                    ? 'rgba(255, 255, 255, 1)' 
-                    : 'rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.borderColor = isLightBackground 
-                    ? 'rgba(0, 0, 0, 0.3)' 
-                    : 'rgba(255, 255, 255, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = linkButtonStyle.backgroundColor as string;
-                  e.currentTarget.style.borderColor = linkButtonStyle.borderColor as string;
-                }}
-              >
-                {link.title}
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
+  const blocksToRender =
+    pageData.blocks && pageData.blocks.length > 0
+      ? pageData.blocks.map((block) => (
+          <BlockRenderer
+            key={block.id}
+            type={block.type}
+            content={block.content}
+            isEditing={false}
+          />
+        ))
+      : renderLegacyContent();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#2a0f25] to-[#7b1334] text-white flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-4">{blocksToRender}</div>
     </div>
   );
 };

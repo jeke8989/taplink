@@ -3,30 +3,30 @@ version: '3.8'
 services:
   postgres:
     image: postgres:14
-    container_name: taplink-postgres
+    container_name: biohub-postgres
     environment:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-taplink}
+      POSTGRES_DB: ${DB_NAME:-biohub}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - taplink-network
+      - biohub-network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: taplink-backend
+    container_name: biohub-backend
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DB_NAME: ${DB_NAME:-taplink}
+      DB_NAME: ${DB_NAME:-biohub}
       DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}
       JWT_SECRET: ${JWT_SECRET:-change-this-secret-key-in-production}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
@@ -37,7 +37,7 @@ services:
       - postgres
     restart: unless-stopped
     networks:
-      - taplink-network
+      - biohub-network
 
   frontend:
     build:
@@ -45,19 +45,19 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
-    container_name: taplink-frontend
+    container_name: biohub-frontend
     ports:
       - "80:80"
     depends_on:
       - backend
     restart: unless-stopped
     networks:
-      - taplink-network
+      - biohub-network
 
 volumes:
   postgres_data:
 
 networks:
-  taplink-network:
+  biohub-network:
     driver: bridge
 

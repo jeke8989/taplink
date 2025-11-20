@@ -1,4 +1,5 @@
 import api from './axios';
+import { Block } from './blocks';
 
 export interface PublicPageData {
   displayName: string | null;
@@ -8,6 +9,7 @@ export interface PublicPageData {
   fontColor: string;
   fontFamily: string;
   links: Array<{ title: string; url: string }>;
+  blocks: Block[];
 }
 
 export const getPublicPage = async (

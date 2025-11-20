@@ -3,9 +3,9 @@
 # Запустите этот скрипт и введите пароль при запросе
 
 SERVER_IP="144.124.246.190"
-REPO_URL="https://github.com/jeke8989/taplink.git"
+REPO_URL="https://github.com/jeke8989/biohub.git"
 
-echo "🚀 Установка Taplink на сервер $SERVER_IP"
+echo "🚀 Установка BioHub на сервер $SERVER_IP"
 echo "Введите пароль сервера при запросе: t7A28TmY7LMQq7776ebf"
 echo ""
 
@@ -46,12 +46,12 @@ echo "📥 Клонирую репозиторий..."
 ssh ${USERNAME}@${SERVER_IP} << ENDSSH
     cd /root 2>/dev/null || cd /home/$USERNAME 2>/dev/null || cd ~
     
-    if [ -d "taplink" ]; then
-        rm -rf taplink
+    if [ -d "biohub" ]; then
+        rm -rf biohub
     fi
     
-    git clone $REPO_URL taplink
-    cd taplink
+    git clone $REPO_URL biohub
+    cd biohub
     
     echo "✅ Репозиторий склонирован"
 ENDSSH
@@ -59,7 +59,7 @@ ENDSSH
 echo "⚙️ Настраиваю .env..."
 
 ssh ${USERNAME}@${SERVER_IP} << 'ENDSSH'
-    cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+    cd ~/biohub || cd /root/biohub || cd /home/*/biohub
     
     DB_PASS=$(openssl rand -hex 16)
     JWT_SECRET=$(openssl rand -hex 32)
@@ -69,11 +69,11 @@ DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=${DB_PASS}
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=${JWT_SECRET}
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
-VITE_API_URL=http://144.124.246.190:3000
+VITE_API_URL=https://biohub.pro/api
 EOF
     
     echo "✅ .env создан"
@@ -85,7 +85,7 @@ ENDSSH
 echo "🐳 Запускаю приложение..."
 
 ssh ${USERNAME}@${SERVER_IP} << 'ENDSSH'
-    cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+    cd ~/biohub || cd /root/biohub || cd /home/*/biohub
     
     docker-compose down 2>/dev/null || true
     docker-compose build --no-cache
@@ -103,5 +103,5 @@ ENDSSH
 
 echo ""
 echo "✅ Установка завершена!"
-echo "🌐 Приложение: http://144.124.246.190"
+echo "🌐 Приложение: https://biohub.pro"
 

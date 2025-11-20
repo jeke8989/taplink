@@ -44,8 +44,8 @@ apt-get install -y git openssl
 ### Шаг 3: Клонируйте репозиторий
 ```bash
 cd /root
-git clone https://github.com/jeke8989/taplink.git
-cd taplink
+git clone https://github.com/jeke8989/biohub.git
+cd biohub
 ```
 
 ### Шаг 4: Создайте .env файл
@@ -58,11 +58,11 @@ DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=${DB_PASS}
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=${JWT_SECRET}
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
-VITE_API_URL=http://144.124.246.190:3000
+VITE_API_URL=https://biohub.pro/api
 EOF
 
 echo "Сохраните эти данные:"
@@ -85,8 +85,8 @@ docker-compose logs -f
 ## Доступ к приложению
 
 После установки приложение будет доступно:
-- **Frontend:** http://144.124.246.190
-- **Backend API:** http://144.124.246.190:3000
+- **Frontend:** https://biohub.pro
+- **Backend API:** https://biohub.pro/api
 
 ## Полезные команды
 
@@ -101,7 +101,7 @@ docker-compose down
 docker-compose restart
 
 # Обновление
-cd /root/taplink
+cd /root/biohub
 git pull
 docker-compose down
 docker-compose build --no-cache

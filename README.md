@@ -1,6 +1,6 @@
-# Taplink - Full-Stack приложение
+# BioHub - Full-Stack приложение
 
-Клон Taplink - сервис для создания персональных страниц со ссылками.
+Клон BioHub — сервис для создания персональных страниц со ссылками.
 
 ## Технологии
 
@@ -19,7 +19,7 @@
 1. **Клонируйте репозиторий:**
 ```bash
 git clone <repository-url>
-cd taplink
+cd biohub
 ```
 
 2. **Настройте Backend:**
@@ -63,7 +63,7 @@ docker-compose logs -f
 ## Структура проекта
 
 ```
-taplink/
+biohub/
 ├── backend/          # Nest.js API
 │   ├── src/
 │   │   ├── auth/     # Аутентификация
@@ -101,7 +101,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
 FRONTEND_URL=http://localhost:5173  # Для CORS

@@ -42,3 +42,10 @@ export const updateMyProfile = async (
   return response.data;
 };
 
+export const checkUsernameAvailability = async (username: string) => {
+  const response = await api.get<{ available: boolean }>(
+    `/profile/username-available/${username}`,
+  );
+  return response.data.available;
+};
+

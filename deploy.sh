@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Скрипт для установки Taplink на сервер
+# Скрипт для установки BioHub на сервер
 # Использование: ./deploy.sh
 
 SERVER_IP="144.124.246.190"
 SERVER_PASSWORD="t7A28TmY7LMQq7776ebf"
-REPO_URL="https://github.com/jeke8989/taplink.git"
+REPO_URL="https://github.com/jeke8989/biohub.git"
 
-echo "🚀 Начинаю установку Taplink на сервер $SERVER_IP"
+echo "🚀 Начинаю установку BioHub на сервер $SERVER_IP"
 
 # Определяем username (пробуем root, затем ubuntu)
 for USERNAME in root ubuntu admin; do
@@ -63,14 +63,14 @@ sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no ${USERNAME}@${SERV
     cd /root || cd /home/$USERNAME || cd ~
     
     # Удаляем старую версию если есть
-    if [ -d "taplink" ]; then
+    if [ -d "biohub" ]; then
         echo "Удаляю старую версию..."
-        rm -rf taplink
+        rm -rf biohub
     fi
     
     # Клонируем репозиторий
-    git clone $REPO_URL taplink
-    cd taplink
+    git clone $REPO_URL biohub
+    cd biohub
     
     echo "✅ Репозиторий склонирован"
 ENDSSH
@@ -78,19 +78,19 @@ ENDSSH
 echo "⚙️ Настраиваю переменные окружения..."
 
 sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no ${USERNAME}@${SERVER_IP} << 'ENDSSH'
-    cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+    cd ~/biohub || cd /root/biohub || cd /home/*/biohub
     
     # Создаем .env файл
     cat > .env << 'ENVFILE'
 DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
-DB_PASSWORD=taplink_secure_password_$(openssl rand -hex 8)
-DB_NAME=taplink
+DB_PASSWORD=biohub_secure_password_$(openssl rand -hex 8)
+DB_NAME=biohub
 JWT_SECRET=$(openssl rand -hex 32)
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
-VITE_API_URL=http://144.124.246.190:3000
+VITE_API_URL=https://biohub.pro/api
 ENVFILE
     
     # Генерируем реальные значения
@@ -102,11 +102,11 @@ DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=${DB_PASS}
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=${JWT_SECRET}
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
-VITE_API_URL=http://144.124.246.190:3000
+VITE_API_URL=https://biohub.pro/api
 EOF
     
     echo "✅ .env файл создан"
@@ -118,7 +118,7 @@ ENDSSH
 echo "🐳 Запускаю Docker Compose..."
 
 sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no ${USERNAME}@${SERVER_IP} << 'ENDSSH'
-    cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+    cd ~/biohub || cd /root/biohub || cd /home/*/biohub
     
     # Останавливаем старые контейнеры если есть
     docker-compose down 2>/dev/null || true
@@ -139,8 +139,8 @@ echo ""
 echo "✅ Установка завершена!"
 echo ""
 echo "🌐 Приложение доступно по адресам:"
-echo "   Frontend: http://144.124.246.190"
-echo "   Backend API: http://144.124.246.190:3000"
+echo "   Frontend: https://biohub.pro"
+echo "   Backend API: https://biohub.pro/api"
 echo ""
 echo "📊 Для проверки статуса выполните на сервере:"
 echo "   docker-compose ps"

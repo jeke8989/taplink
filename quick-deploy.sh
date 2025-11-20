@@ -3,7 +3,7 @@
 
 SERVER_IP="144.124.246.190"
 PASSWORD="t7A28TmY7LMQq7776ebf"
-REPO_URL="https://github.com/jeke8989/taplink.git"
+REPO_URL="https://github.com/jeke8989/biohub.git"
 
 # Пробуем разные username
 for USERNAME in root ubuntu admin; do

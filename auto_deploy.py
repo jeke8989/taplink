@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Автоматическая установка Taplink на сервер
+Автоматическая установка BioHub на сервер
 """
 import subprocess
 import sys
@@ -8,7 +8,7 @@ import time
 
 SERVER_IP = "144.124.246.190"
 PASSWORD = "t7A28TmY7LMQq7776ebf"
-REPO_URL = "https://github.com/jeke8989/taplink.git"
+REPO_URL = "https://github.com/jeke8989/biohub.git"
 
 def run_ssh_command(username, command):
     """Выполняет команду через SSH с паролем"""
@@ -34,7 +34,7 @@ expect eof
         return False, "", "Timeout"
 
 def main():
-    print("🚀 Начинаю установку Taplink на сервер...")
+    print("🚀 Начинаю установку BioHub на сервер...")
     
     # Пробуем разные username
     for username in ['root', 'ubuntu', 'admin']:
@@ -78,9 +78,9 @@ echo "DONE"
     print("\n📥 Клонирую репозиторий...")
     clone_script = f"""
 cd /root 2>/dev/null || cd /home/{working_user} 2>/dev/null || cd ~
-if [ -d "taplink" ]; then rm -rf taplink; fi
-git clone {REPO_URL} taplink
-cd taplink
+if [ -d "biohub" ]; then rm -rf biohub; fi
+git clone {REPO_URL} biohub
+cd biohub
 echo "DONE"
 """
     
@@ -93,7 +93,7 @@ echo "DONE"
     # Создание .env
     print("\n⚙️ Настраиваю переменные окружения...")
     env_script = """
-cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+cd ~/biohub || cd /root/biohub || cd /home/*/biohub
 DB_PASS=$(openssl rand -hex 16)
 JWT_SECRET=$(openssl rand -hex 32)
 cat > .env << EOF
@@ -101,11 +101,11 @@ DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=${DB_PASS}
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=${JWT_SECRET}
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
-VITE_API_URL=http://144.124.246.190:3000
+VITE_API_URL=https://biohub.pro/api
 EOF
 echo "DB_PASSWORD: ${DB_PASS}" > credentials.txt
 echo "JWT_SECRET: ${JWT_SECRET}" >> credentials.txt
@@ -125,7 +125,7 @@ echo "DONE"
     # Запуск Docker Compose
     print("\n🐳 Запускаю приложение...")
     run_script = """
-cd ~/taplink || cd /root/taplink || cd /home/*/taplink
+cd ~/biohub || cd /root/biohub || cd /home/*/biohub
 docker-compose down 2>/dev/null || true
 docker-compose build --no-cache
 docker-compose up -d
@@ -145,8 +145,8 @@ echo "DONE"
     print("\n" + "="*50)
     print("✅ Установка завершена!")
     print("🌐 Приложение доступно:")
-    print("   Frontend: http://144.124.246.190")
-    print("   Backend:  http://144.124.246.190:3000")
+    print("   Frontend: https://biohub.pro")
+    print("   Backend:  https://biohub.pro/api")
     print("="*50)
 
 if __name__ == "__main__":

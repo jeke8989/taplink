@@ -13,6 +13,7 @@ async function bootstrap() {
 
   const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5174',
     'http://144.124.246.190',
     process.env.FRONTEND_URL,
     process.env.CORS_ORIGIN,

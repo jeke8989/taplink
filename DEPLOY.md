@@ -1,4 +1,4 @@
-# Инструкция по деплою Taplink
+# Инструкция по деплою BioHub
 
 ## Вариант 1: Деплой с Docker Compose (Рекомендуется)
 
@@ -11,8 +11,8 @@
 
 1. **Скопируйте проект на сервер:**
 ```bash
-git clone <ваш-репозиторий> taplink
-cd taplink
+git clone <ваш-репозиторий> biohub
+cd biohub
 ```
 
 2. **Создайте файл `.env` в корне проекта:**
@@ -25,12 +25,10 @@ nano .env  # или используйте любой редактор
 ```env
 DB_USERNAME=postgres
 DB_PASSWORD=ваш-надежный-пароль
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=ваш-очень-надежный-секретный-ключ-минимум-32-символа
 JWT_EXPIRES_IN=7d
-VITE_API_URL=http://ваш-домен.com:3000
-# или если используете один домен:
-# VITE_API_URL=http://ваш-домен.com/api
+VITE_API_URL=https://ваш-домен.com/api
 ```
 
 4. **Запустите приложение:**
@@ -91,9 +89,9 @@ sudo -u postgres psql
 
 В PostgreSQL консоли:
 ```sql
-CREATE DATABASE taplink;
-CREATE USER taplink_user WITH PASSWORD 'ваш-пароль';
-GRANT ALL PRIVILEGES ON DATABASE taplink TO taplink_user;
+CREATE DATABASE biohub;
+CREATE USER biohub_user WITH PASSWORD 'ваш-пароль';
+GRANT ALL PRIVILEGES ON DATABASE biohub TO biohub_user;
 \q
 ```
 
@@ -101,8 +99,8 @@ GRANT ALL PRIVILEGES ON DATABASE taplink TO taplink_user;
 
 ```bash
 cd ~
-git clone <ваш-репозиторий> taplink
-cd taplink/backend
+git clone <ваш-репозиторий> biohub
+cd biohub/backend
 
 # Установка зависимостей
 npm install
@@ -115,9 +113,9 @@ nano .env
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=taplink_user
+DB_USERNAME=biohub_user
 DB_PASSWORD=ваш-пароль
-DB_NAME=taplink
+DB_NAME=biohub
 JWT_SECRET=ваш-секретный-ключ
 JWT_EXPIRES_IN=7d
 NODE_ENV=production
@@ -128,7 +126,7 @@ NODE_ENV=production
 npm run build
 
 # Запуск с PM2
-pm2 start dist/main.js --name taplink-backend
+pm2 start dist/main.js --name biohub-backend
 pm2 save
 pm2 startup  # Следуйте инструкциям для автозапуска
 ```
@@ -136,7 +134,7 @@ pm2 startup  # Следуйте инструкциям для автозапус
 ### Деплой Frontend
 
 ```bash
-cd ~/taplink/frontend
+cd ~/biohub/frontend
 
 # Установка зависимостей
 npm install
@@ -148,13 +146,13 @@ echo "VITE_API_URL=http://ваш-домен.com:3000" > .env.production
 npm run build
 
 # Копирование в Nginx
-sudo cp -r dist/* /var/www/taplink/
+sudo cp -r dist/* /var/www/biohub/
 ```
 
 ### Настройка Nginx
 
 ```bash
-sudo nano /etc/nginx/sites-available/taplink
+sudo nano /etc/nginx/sites-available/biohub
 ```
 
 Содержимое:
@@ -163,7 +161,7 @@ server {
     listen 80;
     server_name ваш-домен.com www.ваш-домен.com;
 
-    root /var/www/taplink;
+    root /var/www/biohub;
     index index.html;
 
     # SPA routing
@@ -194,7 +192,7 @@ server {
 
 ```bash
 # Активация конфигурации
-sudo ln -s /etc/nginx/sites-available/taplink /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/biohub /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -242,9 +240,9 @@ curl http://ваш-домен.com:3000/auth/login
 
 3. **База данных:**
 ```bash
-docker-compose exec postgres psql -U postgres -d taplink -c "\dt"
+docker-compose exec postgres psql -U postgres -d biohub -c "\dt"
 # или
-psql -U taplink_user -d taplink -c "\dt"
+psql -U biohub_user -d biohub -c "\dt"
 ```
 
 ---
@@ -259,7 +257,7 @@ docker-compose logs -f frontend
 
 ### PM2
 ```bash
-pm2 logs taplink-backend
+pm2 logs biohub-backend
 pm2 monit
 ```
 
@@ -275,13 +273,13 @@ sudo tail -f /var/log/nginx/access.log
 
 ```bash
 # Docker
-docker-compose exec postgres pg_dump -U postgres taplink > backup.sql
+docker-compose exec postgres pg_dump -U postgres biohub > backup.sql
 
 # Без Docker
-pg_dump -U taplink_user taplink > backup.sql
+pg_dump -U biohub_user biohub > backup.sql
 
 # Восстановление
-psql -U taplink_user taplink < backup.sql
+psql -U biohub_user biohub < backup.sql
 ```
 
 ---
@@ -299,6 +297,6 @@ psql -U taplink_user taplink < backup.sql
 - Проверьте настройки Nginx proxy
 
 ### Ошибки базы данных
-- Проверьте подключение: `psql -U taplink_user -d taplink`
+- Проверьте подключение: `psql -U biohub_user -d biohub`
 - Убедитесь, что миграции выполнены (TypeORM создаст таблицы автоматически при первом запуске)
 

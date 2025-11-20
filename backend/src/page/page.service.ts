@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserProfile } from '../profile/entities/user-profile.entity';
 import { User } from '../users/entities/user.entity';
+import { Block } from '../blocks/entities/block.entity';
 
 @Injectable()
 export class PageService {
@@ -11,6 +12,8 @@ export class PageService {
     private profileRepository: Repository<UserProfile>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Block)
+    private blockRepository: Repository<Block>,
   ) {}
 
   async getPublicPage(username: string) {
@@ -31,6 +34,12 @@ export class PageService {
       throw new NotFoundException('Profile not found');
     }
 
+    // Получаем блоки пользователя
+    const blocks = await this.blockRepository.find({
+      where: { user: { id: user.id } },
+      order: { order: 'ASC' },
+    });
+
     // Возвращаем только публичные данные
     return {
       displayName: profile.displayName,
@@ -40,6 +49,7 @@ export class PageService {
       fontColor: profile.fontColor,
       fontFamily: profile.fontFamily,
       links: profile.links,
+      blocks: blocks,
     };
   }
 }

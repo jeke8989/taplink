@@ -5,6 +5,7 @@ import {
   Body,
   UseGuards,
   Request,
+  Param,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -37,6 +38,18 @@ export class ProfileController {
       req.user.userId,
       updateProfileDto,
     );
+  }
+
+  @Get('username-available/:username')
+  async checkUsername(
+    @Request() req,
+    @Param('username') username: string,
+  ) {
+    const available = await this.profileService.isUsernameAvailable(
+      username,
+      req.user.userId,
+    );
+    return { available };
   }
 }
 

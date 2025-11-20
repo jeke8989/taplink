@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProfileModule } from './profile/profile.module';
 import { PageModule } from './page/page.module';
+import { BlocksModule } from './blocks/blocks.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { PageModule } from './page/page.module';
       port: parseInt(process.env.DB_PORT) || 5432,
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_NAME || 'taplink',
+      database: process.env.DB_NAME || 'biohub',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.DB_SYNCHRONIZE === 'true' || process.env.NODE_ENV !== 'production',
     }),
@@ -25,6 +26,7 @@ import { PageModule } from './page/page.module';
     UsersModule,
     ProfileModule,
     PageModule,
+    BlocksModule,
   ],
 })
 export class AppModule {}
