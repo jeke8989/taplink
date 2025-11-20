@@ -1,5 +1,5 @@
 import api from './axios';
-import { Block } from './blocks';
+import type { Block } from './blocks';
 
 export interface PublicPageData {
   displayName: string | null;
