@@ -6,20 +6,21 @@
  * 2. Конвертацию всех Event в Page
  * 3. Перенос блоков с event_id на page_id
  * 
- * Запуск: npx ts-node scripts/migrate-events-to-pages.ts
+ * Запуск: npx ts-node -r tsconfig-paths/register scripts/migrate-events-to-pages.ts
  */
 
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import * as path from 'path';
 
-// Загружаем переменные окружения
-config();
+// Загружаем переменные окружения из корня проекта
+const envPath = path.join(__dirname, '../.env');
+config({ path: envPath });
 
 const dataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
+  port: parseInt(process.env.DB_PORT || '5432', 10),
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'biohub',
