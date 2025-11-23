@@ -8,4 +8,14 @@ export { MessengersBlock } from './MessengersBlock';
 export { SocialNetworksBlock } from './SocialNetworksBlock';
 export { MapBlock } from './MapBlock';
 export { CustomBlock } from './CustomBlock';
+export { EventDateTimeBlock } from './EventDateTimeBlock';
+export { EventLocationBlock } from './EventLocationBlock';
+export { EventRegistrationBlock } from './EventRegistrationBlock';
+export { EventScheduleBlock } from './EventScheduleBlock';
+export { EventSpeakersBlock } from './EventSpeakersBlock';
+export { EventPriceBlock } from './EventPriceBlock';
+export { EventGalleryBlock } from './EventGalleryBlock';
+export { EventTicketSaleBlock } from './EventTicketSaleBlock';
+export { ImageCarouselBlock } from './ImageCarouselBlock';
+export { DateTimeBlock } from './DateTimeBlock';
 

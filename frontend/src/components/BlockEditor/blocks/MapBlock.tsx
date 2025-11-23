@@ -11,7 +11,7 @@ interface MapBlockProps {
     description?: string;
   };
   isEditing?: boolean;
-  onChange?: (content: any) => void;
+  onChange?: (content: Record<string, unknown>) => void;
 }
 
 export const MapBlock: React.FC<MapBlockProps> = ({
@@ -68,7 +68,7 @@ export const MapBlock: React.FC<MapBlockProps> = ({
                 type="text"
                 value={address}
                 onChange={(e) => handleAddressChange(e.target.value, index)}
-                placeholder="Адрес (улица, дом)"
+                placeholder="Адрес (улица, дом, город)"
                 className={`${inputClass} flex-1`}
               />
               {addresses.length > 1 && (
@@ -94,8 +94,10 @@ export const MapBlock: React.FC<MapBlockProps> = ({
     );
   }
 
+  const validAddresses = addresses.filter((addr) => addr?.trim());
+
   return (
-    <div className="bg-white bg-opacity-10 rounded-xl p-6 text-white space-y-3">
+    <div className="bg-white bg-opacity-10 rounded-xl p-6 text-white space-y-4">
       <div className="flex items-center gap-2 text-lg font-semibold">
         <MapPin size={20} />
         <span>{content.title || 'Наши локации'}</span>
@@ -104,19 +106,17 @@ export const MapBlock: React.FC<MapBlockProps> = ({
         <div className="text-sm opacity-80">{content.description}</div>
       )}
       <div className="space-y-2">
-        {addresses
-          .filter((addr) => addr?.trim())
-          .map((address, index) => (
-            <div
-              key={`view-address-${index}`}
-              className="flex items-center gap-2 text-sm opacity-90"
-            >
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white bg-opacity-20">
-                {index + 1}
-              </span>
-              <span>{address}</span>
-            </div>
-          ))}
+        {validAddresses.map((address, index) => (
+          <div
+            key={`view-address-${index}`}
+            className="flex items-center gap-2 text-sm opacity-90"
+          >
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-white bg-opacity-20">
+              {index + 1}
+            </span>
+            <span>{address}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

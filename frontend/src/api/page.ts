@@ -12,10 +12,24 @@ export interface PublicPageData {
   blocks: Block[];
 }
 
+export interface PagePublicData {
+  title: string;
+  description: string | null;
+  slug: string | null;
+  blocks: Block[];
+}
+
 export const getPublicPage = async (
   username: string,
 ): Promise<PublicPageData> => {
   const response = await api.get<PublicPageData>(`/page/${username}`);
+  return response.data;
+};
+
+export const getPageBySlug = async (
+  pageSlug: string,
+): Promise<PagePublicData> => {
+  const response = await api.get<PagePublicData>(`/page/${pageSlug}`);
   return response.data;
 };
 

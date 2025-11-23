@@ -1,5 +1,6 @@
 import React from 'react';
 import { User } from 'lucide-react';
+import AvatarImageCropper from '../../AvatarImageCropper';
 
 const inputClass =
   'w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/40';
@@ -11,7 +12,7 @@ interface AvatarBlockProps {
     subtitle?: string;
   };
   isEditing?: boolean;
-  onChange?: (content: any) => void;
+  onChange?: (content: Record<string, unknown>) => void;
 }
 
 export const AvatarBlock: React.FC<AvatarBlockProps> = ({
@@ -26,12 +27,10 @@ export const AvatarBlock: React.FC<AvatarBlockProps> = ({
           <User size={16} />
           <span>Блок аватара</span>
         </div>
-        <input
-          type="url"
-          value={content.avatarUrl || ''}
-          onChange={(e) => onChange?.({ ...content, avatarUrl: e.target.value })}
-          placeholder="URL аватара"
-          className={inputClass}
+        <AvatarImageCropper
+          currentImage={content.avatarUrl}
+          onImageChange={(url) => onChange?.({ ...content, avatarUrl: url || '' })}
+          size={150}
         />
         <input
           type="text"

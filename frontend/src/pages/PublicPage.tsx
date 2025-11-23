@@ -9,10 +9,12 @@ export const PublicPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [pageData, setPageData] = useState<PublicPageData | null>(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const loadPage = useCallback(async () => {
-    if (!username) return;
+    if (!username || hasLoaded) return;
     
+    setHasLoaded(true);
     try {
       const data = await getPublicPage(username);
       setPageData(data);
@@ -24,13 +26,13 @@ export const PublicPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [username]);
+  }, [username, hasLoaded]);
 
   useEffect(() => {
-    if (username) {
+    if (username && !hasLoaded) {
       loadPage();
     }
-  }, [username, loadPage]);
+  }, [username, loadPage, hasLoaded]);
 
   if (loading) {
     return (

@@ -5,6 +5,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Editor } from './pages/Editor';
 import { PublicPage } from './pages/PublicPage';
+import { PagePublicPage } from './pages/PagePublicPage';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/:username" element={<PublicPage />} />
+          <Route path="/:identifier" element={<PagePublicPage />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

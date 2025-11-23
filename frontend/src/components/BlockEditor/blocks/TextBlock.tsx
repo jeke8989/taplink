@@ -9,7 +9,7 @@ interface TextBlockProps {
     text?: string;
   };
   isEditing?: boolean;
-  onChange?: (content: any) => void;
+  onChange?: (content: Record<string, unknown>) => void;
 }
 
 export const TextBlock: React.FC<TextBlockProps> = ({
@@ -41,4 +41,3 @@ export const TextBlock: React.FC<TextBlockProps> = ({
     </div>
   );
 };
-

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Используем относительные пути для API - nginx проксирует их на бэкенд
+// В dev режиме используем прямой URL к бэкенду, в production - относительные пути (nginx проксирует)
 const api = axios.create({
-  baseURL: '',
+  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:3000' : ''),
 });
 
 // Добавляем токен в заголовки автоматически

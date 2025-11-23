@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { X, Copy, Lock, Globe, Download, CheckCircle2 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import type { PageSettings } from './types';
@@ -45,6 +45,8 @@ export const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
   }));
   const [copied, setCopied] = useState(false);
   const usernameHelper = usernameMessage || 'Введите никнейм';
+  const usernameTimeoutRef = useRef<number | null>(null);
+  const usernameInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = <K extends keyof PageSettings>(
     key: K,
@@ -124,11 +126,27 @@ export const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
   };
 
   const handleSave = () => {
+    // Очищаем timeout при сохранении
+    if (usernameTimeoutRef.current !== null) {
+      clearTimeout(usernameTimeoutRef.current);
+      usernameTimeoutRef.current = null;
+    }
+    // Вызываем onUsernameChange с финальным значением перед сохранением
+    onUsernameChange(form.username);
     onSave({
       ...form,
       pageUrl: publicUrl,
     });
   };
+
+  // Очищаем timeout при размонтировании
+  useEffect(() => {
+    return () => {
+      if (usernameTimeoutRef.current !== null) {
+        clearTimeout(usernameTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!isOpen) {
     return null;
@@ -191,12 +209,48 @@ export const PageSettingsModal: React.FC<PageSettingsModalProps> = ({
                     Никнейм (адрес страницы)
                   </label>
                   <input
+                    ref={usernameInputRef}
                     className={baseInputClass}
                     value={form.username}
                     onChange={(e) => {
                       const value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+                      
+                      // Сохраняем позицию курсора и фокус
+                      const input = e.target as HTMLInputElement;
+                      const cursorPosition = input.selectionStart || 0;
+                      const wasFocused = document.activeElement === input;
+                      
                       handleChange('username', value);
-                      onUsernameChange(value);
+                      
+                      // Восстанавливаем фокус и позицию курсора сразу после обновления
+                      if (wasFocused && usernameInputRef.current) {
+                        // Используем useLayoutEffect через setTimeout(0) для немедленного восстановления
+                        setTimeout(() => {
+                          if (usernameInputRef.current && document.activeElement !== usernameInputRef.current) {
+                            usernameInputRef.current.focus();
+                            const newPosition = Math.min(cursorPosition, value.length);
+                            usernameInputRef.current.setSelectionRange(newPosition, newPosition);
+                          }
+                        }, 0);
+                      }
+                      
+                      // Используем debounce для вызова onUsernameChange (500ms)
+                      if (usernameTimeoutRef.current !== null) {
+                        clearTimeout(usernameTimeoutRef.current);
+                      }
+                      usernameTimeoutRef.current = window.setTimeout(() => {
+                        onUsernameChange(value);
+                        usernameTimeoutRef.current = null;
+                      }, 500);
+                    }}
+                    onBlur={(e) => {
+                      // Сохраняем фокус только если пользователь не кликнул в другое место
+                      // Если фокус потерян не из-за клика вне инпута, восстанавливаем его
+                      const relatedTarget = e.relatedTarget as HTMLElement | null;
+                      if (!relatedTarget || !e.currentTarget.contains(relatedTarget)) {
+                        // Пользователь кликнул в другое место - это нормально, не восстанавливаем фокус
+                        return;
+                      }
                     }}
                     placeholder="username"
                   />

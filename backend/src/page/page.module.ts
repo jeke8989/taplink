@@ -5,9 +5,14 @@ import { PageService } from './page.service';
 import { UserProfile } from '../profile/entities/user-profile.entity';
 import { User } from '../users/entities/user.entity';
 import { Block } from '../blocks/entities/block.entity';
+import { Page } from '../pages/entities/page.entity';
+import { PagesModule } from '../pages/pages.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserProfile, User, Block])],
+  imports: [
+    TypeOrmModule.forFeature([UserProfile, User, Block, Page]),
+    PagesModule,
+  ],
   controllers: [PageController],
   providers: [PageService],
 })

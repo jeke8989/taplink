@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { ProfileModule } from './profile/profile.module';
 import { PageModule } from './page/page.module';
 import { BlocksModule } from './blocks/blocks.module';
+import { PagesModule } from './pages/pages.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { BlocksModule } from './blocks/blocks.module';
     ProfileModule,
     PageModule,
     BlocksModule,
+    PagesModule,
+    UploadModule,
   ],
 })
 export class AppModule {}

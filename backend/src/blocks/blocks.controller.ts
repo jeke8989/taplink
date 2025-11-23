@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -21,8 +22,9 @@ export class BlocksController {
   constructor(private readonly blocksService: BlocksService) {}
 
   @Get()
-  async findAll(@Request() req) {
-    return this.blocksService.findAllByUserId(req.user.userId);
+  async findAll(@Request() req, @Query('pageId') pageId?: string) {
+    const pageIdParam = pageId === 'null' || pageId === '' ? null : pageId;
+    return this.blocksService.findAllByUserId(req.user.userId, pageIdParam);
   }
 
   @Post()
@@ -47,7 +49,7 @@ export class BlocksController {
 
   @Put('reorder/bulk')
   async reorder(@Request() req, @Body() reorderDto: ReorderBlocksDto) {
-    return this.blocksService.reorder(req.user.userId, reorderDto.blockIds);
+    return this.blocksService.reorder(req.user.userId, reorderDto.blockIds, reorderDto.pageId);
   }
 }
 
