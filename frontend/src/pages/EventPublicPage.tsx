@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getEventPage } from '../api/page';
 import type { EventPageData } from '../api/page';
 import { BlockRenderer } from '../components/BlockEditor/BlockRenderer';
+import type { Block } from '../api/blocks';
 
 export const EventPublicPage: React.FC = () => {
   const { username, eventSlug } = useParams<{ username: string; eventSlug: string }>();
@@ -78,7 +79,7 @@ export const EventPublicPage: React.FC = () => {
 
               <section className="space-y-4 md:space-y-5">
                 {pageData.blocks && pageData.blocks.length > 0 ? (
-                  pageData.blocks.map((block) => (
+                  pageData.blocks.map((block: Block) => (
                     <BlockRenderer
                       key={block.id}
                       type={block.type}

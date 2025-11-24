@@ -4,7 +4,6 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Editor } from './pages/Editor';
-import { PublicPage } from './pages/PublicPage';
 import { PagePublicPage } from './pages/PagePublicPage';
 
 function App() {

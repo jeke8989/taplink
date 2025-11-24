@@ -19,6 +19,12 @@ export interface PagePublicData {
   blocks: Block[];
 }
 
+export interface EventPageData {
+  title: string;
+  description: string | null;
+  blocks: Block[];
+}
+
 export const getPublicPage = async (
   username: string,
 ): Promise<PublicPageData> => {
@@ -30,6 +36,14 @@ export const getPageBySlug = async (
   pageSlug: string,
 ): Promise<PagePublicData> => {
   const response = await api.get<PagePublicData>(`/page/${pageSlug}`);
+  return response.data;
+};
+
+export const getEventPage = async (
+  username: string,
+  eventSlug: string,
+): Promise<EventPageData> => {
+  const response = await api.get<EventPageData>(`/events/${username}/${eventSlug}`);
   return response.data;
 };
 
