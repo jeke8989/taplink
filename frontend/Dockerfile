@@ -5,8 +5,8 @@ WORKDIR /app
 # Копируем package files
 COPY package*.json ./
 
-# Устанавливаем зависимости
-RUN npm ci
+# Устанавливаем зависимости (React 19 + react-quill требуют legacy peer deps)
+RUN npm ci --legacy-peer-deps
 
 # Копируем исходный код
 COPY . .
